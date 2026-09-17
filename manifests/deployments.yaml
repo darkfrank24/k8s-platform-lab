@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: fraud-bot }
+spec:
+ replicas: 2
+ selector: { matchLabels: { app: fraud-bot } }
+ template:
+   metadata: { labels: { app: fraud-bot } }
+   spec:
+     containers:
+     - name: api
+       image: myacr.azurecr.io/fraud-bot:1.0
+       ports: [{ containerPort: 8080 }]
+---
+apiVersion: v1
+kind: ConfigMap
+metadata: { name: fraud-bot-config }
+data: { ASPNETCORE_ENVIRONMENT: "Production" }
