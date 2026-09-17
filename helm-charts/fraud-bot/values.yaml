@@ -1,0 +1,68 @@
+replicaCount: 2
+image:
+ repository: myacr.azurecr.io/fraud-bot
+ pullPolicy: IfNotPresent
+ tag: "1.0.0"
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+ create: true
+ automount: true
+ name: ""
+podAnnotations: {}
+podSecurityContext: {}
+securityContext:
+ capabilities:
+   drop: ["ALL"]
+ readOnlyRootFilesystem: true
+ runAsNonRoot: true
+ runAsUser: 1000
+service:
+ type: ClusterIP
+ port: 80
+ targetPort: 8080
+config:
+ aspnetcoreEnv: Production
+ logLevel: Information
+resources:
+ limits:
+   cpu: 500m
+   memory: 512Mi
+ requests:
+   cpu: 250m
+   memory: 256Mi
+autoscaling:
+ enabled: false
+ minReplicas: 2
+ maxReplicas: 5
+ targetCPUUtilizationPercentage: 70
+# --- RBAC & Multitenancy requirements for demo ---
+rbac:
+ enabled: true
+ serviceAccountName: fraud-bot
+resourceQuota:
+ enabled: true
+ hard:
+   requests.cpu: "2"
+   requests.memory: 2Gi
+   limits.cpu: "4"
+   limits.memory: 4Gi
+networkPolicy:
+ enabled: true
+ ingress:
+       - from:
+               - namespaceSelector:
+           matchLabels:
+             name: ingress-nginx
+# --- Monitoring for Prometheus/Grafana ---
+serviceMonitor:
+ enabled: true
+ interval: 30s
+# --- For AI-assisted tooling ---
+podDisruptionBudget:
+ enabled: true
+ minAvailable: 1
+nodeSelector: {}
+tolerations: []
+affinity: {}
