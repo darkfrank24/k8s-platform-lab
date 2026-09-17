@@ -1,0 +1,14 @@
+apiVersion: v2
+name: fraud-bot
+description: Fraud detection voice bot - multitenancy demo for Kubernetes platform
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+   - ai
+   - fraud
+   - kubernetes
+   - multitenancy
+maintainers:
+   - name: Luto Mtamalala
+   email: lumtamalala@gmail.com
